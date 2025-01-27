@@ -7,6 +7,7 @@
 class Queue
 {
  public:
+  Queue();
   void enqueue(Node* node);
   Node* dequeue();
   

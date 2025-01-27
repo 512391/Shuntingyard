@@ -7,6 +7,8 @@ class Stack
   Node* head;
   
  public:
+  Stack();
+  void print();
   Node* pop();
   Node* peek();
   void push(Node* node);

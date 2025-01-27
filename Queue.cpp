@@ -3,6 +3,11 @@
 
 using namespace std;
 
+Queue::Queue()
+{
+  Queue::head = nullptr;
+}
+
 void Queue::enqueue(Node* node)
 {
   if(Queue::head == nullptr)

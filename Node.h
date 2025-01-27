@@ -9,7 +9,7 @@ class Node
   char data;
   Node* next;
  public:
-  Node(char data, Node* next);
+  Node(char data);
   char getData();
   Node* getNext();
   void setNext(Node* node);

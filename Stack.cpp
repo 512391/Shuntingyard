@@ -3,6 +3,26 @@
 
 using namespace std;
 
+Stack::Stack()
+{
+  Stack::head = nullptr;
+}
+
+void Stack::print()
+{
+  if(Stack::head == nullptr)
+    {
+      return;
+    }
+  Node* current = Stack::head;
+  
+  while(current->getNext() != nullptr)
+    {
+      cout << current->getData() << endl;
+    }
+  cout << current->getData() << endl;
+}
+
 Node* Stack::pop()
 {
   if(Stack::head == nullptr)
@@ -13,7 +33,14 @@ Node* Stack::pop()
   
   Node* toReturn = Stack::head;
 
-  Stack::head = toReturn->getNext();
+  if(Stack::head->getNext() == nullptr)
+    {
+      Stack::head = nullptr;
+    }
+  else
+    {
+      Stack::head = toReturn->getNext();
+    }
   
   return toReturn;
 }

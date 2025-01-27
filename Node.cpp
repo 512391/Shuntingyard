@@ -2,10 +2,10 @@
 #include"Node.h"
 
 
-Node::Node(char data, Node* next)
+Node::Node(char data)
 {
   Node::data = data;
-  Node::next = next;
+  Node::next = nullptr;
 }
 
 char Node::getData()
