@@ -19,6 +19,7 @@ void Stack::print()
   while(current->getNext() != nullptr)
     {
       cout << current->getData() << endl;
+      current = current->getNext();
     }
   cout << current->getData() << endl;
 }
