@@ -4,7 +4,7 @@
 #include<cstring>
 #include<cmath>
 #include<map>
-
+#include"BinaryStack.h"
 using namespace std;
 
 char* infixToPostfix(char* equation, map<char, int> precedence, int size)
@@ -134,11 +134,90 @@ int evaluatePostfix(char* equation, int length)
       return (int)numberStack->pop()->getData()-48;
 }
 
+BinaryNode* createExpressionTree(char* postfix, int length)
+{
+  cout << "creating ex tree\n";
+  
+  BinaryStack* stack = new BinaryStack();
+
+  for(int i = 0; i < length; i++)
+    {
+      if((int)postfix[i]>47 &&(int)postfix[i]<58)
+	{
+	  stack->push(new BinaryNode(postfix[i]));
+	}
+      else
+	{
+	  BinaryNode* bn = new BinaryNode(postfix[i]);
+	  cout << "evaling: ";
+	  bn->setLeft(stack->pop());
+	  bn->setRight(stack->pop());
+
+	  cout << bn->getLeft()->getData() << ", " <<bn->getLeft()->getData();
+	  
+	  stack->push(bn);
+	}
+    }
+
+  return stack->pop();
+}
+
+void goDownLeft(BinaryNode* head)
+{
+  if(head->getLeft() != nullptr)
+    {
+      cout << head->getLeft()->getData();
+      goDownLeft(head->getLeft());
+
+      if(head->getRight() != nullptr)
+        {
+          cout << head->getRight()->getData();
+        }
+    }
+  else
+    {
+      return;
+    }
+}
+
+void goDownRight(BinaryNode* head)
+{
+  if(head->getRight() != nullptr)
+    {
+      cout << head->getRight()->getData();
+      goDownLeft(head->getRight());
+      if(head->getLeft() != nullptr)
+        {
+          cout << head->getLeft()->getData();
+        }
+    }
+  else
+    {
+      return;
+    }
+}
+
+
+void printPrefix(BinaryNode* head)
+{
+  cout << head->getData();
+  goDownLeft(head);
+  goDownLeft(head->getLeft());
+}
+
+void printPostfix(BinaryNode* head)
+{
+}
+
+void printInfix(BinaryNode* head)
+{
+}
+
 int main()
 {
   map<char, int> precedence = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}, {'(', 0}, {')', 0}};
 
   char test[17] = {'(','(','5','+','2',')','+','2','*','(','6','/','3',')',')','+','1'};
   char test2[7] = {'1','+','4','*','2','+','2'};
-  cout << "answer: " <<evaluatePostfix(infixToPostfix(test, precedence, 17), 17);
+  printPrefix(createExpressionTree(infixToPostfix(test, precedence, 17), 17));
 }
