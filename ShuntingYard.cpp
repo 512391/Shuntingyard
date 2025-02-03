@@ -134,9 +134,11 @@ int evaluatePostfix(char* equation, int length)
       return (int)numberStack->pop()->getData()-48;
 }
 
-BinaryNode* createExpressionTree(char* postfix, int length)
+BinaryNode* createExpressionTree(char* postfix)
 {
   cout << "creating ex tree\n";
+
+  int length = strlen(postfix);
   
   BinaryStack* stack = new BinaryStack();
 
@@ -153,7 +155,7 @@ BinaryNode* createExpressionTree(char* postfix, int length)
 	  bn->setLeft(stack->pop());
 	  bn->setRight(stack->pop());
 
-	  cout << bn->getLeft()->getData() << ", " <<bn->getLeft()->getData();
+	  cout << bn->getLeft()->getData() << ", " <<bn->getRight()->getData();
 	  
 	  stack->push(bn);
 	}
@@ -162,62 +164,129 @@ BinaryNode* createExpressionTree(char* postfix, int length)
   return stack->pop();
 }
 
-void goDownLeft(BinaryNode* head)
+void printExpressionTree(int amountOfNodes, BinaryNode** nodes)
 {
-  if(head->getLeft() != nullptr)
-    {
-      cout << head->getLeft()->getData();
-      goDownLeft(head->getLeft());
+  BinaryNode** newNodes = new BinaryNode*[amountOfNodes*2];
+  int newArraySize = 0;
 
-      if(head->getRight() != nullptr)
-        {
-          cout << head->getRight()->getData();
-        }
-    }
-  else
+  if(nodes[0] == NULL)
     {
       return;
     }
-}
 
-void goDownRight(BinaryNode* head)
-{
-  if(head->getRight() != nullptr)
+  for(int i = 0; i< amountOfNodes; i++)
     {
-      cout << head->getRight()->getData();
-      goDownLeft(head->getRight());
-      if(head->getLeft() != nullptr)
-        {
-          cout << head->getLeft()->getData();
-        }
+      cout << nodes[i]->getData() << " ";
+       if(nodes[i]->getLeft() != nullptr)
+            {
+       newNodes[newArraySize] = nodes[i]->getLeft();
+       newArraySize++;
+	    }
+        if(nodes[i]->getRight() != nullptr)
+            {
+       newNodes[newArraySize] = nodes[i]->getRight();
+       newArraySize++;
+	    }
+     
     }
-  else
-    {
-      return;
-    }
-}
+  cout << endl;
 
+  
+  printExpressionTree(newArraySize, newNodes);
+    
+}
 
 void printPrefix(BinaryNode* head)
 {
+  if(head == nullptr)
+    {
+      return;
+    }
   cout << head->getData();
-  goDownLeft(head);
-  goDownLeft(head->getLeft());
+  printPrefix(head->getLeft());
+  printPrefix(head->getRight());
 }
 
 void printPostfix(BinaryNode* head)
 {
+  if(head == nullptr) {
+        return;
+    }
+  printPostfix(head->getLeft());
+    printPostfix(head->getRight());
+    cout << head->getData();
 }
 
 void printInfix(BinaryNode* head)
 {
+  if(head == nullptr)
+    {
+      return;
+    }
+  printInfix(head->getLeft());
+  cout << head->getData();
+  printInfix(head->getRight());
+}
+
+void getInput()
+{
+  cout << "enter expression: ";
+  char* input = new char[40];
+  cin>>input;
+  
+  char* editedInput = new char[40];
+
+  int len = strlen(input);
+  
+  int currentIndex = 0;
+  for(int i =0; i < len;i++)
+    {
+      if(input[i]!=' ')
+	{
+	  editedInput[currentIndex]=input[i];
+	  currentIndex++;
+	}
+    }
+
+  int length = strlen(editedInput);
+  
+  map<char, int> precedence = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}, {'(', 0}, {')', 0}};
+  
+  cout << endl;
+  BinaryNode* node = createExpressionTree(infixToPostfix(editedInput, precedence, length));
+
+  cout << "press 1 for infix, 2 for postfix, 3 for prefix, 4 for all";
+  char in;
+  cin>>in;
+
+  if(in == '1')
+    {
+      printInfix(node);
+      cout <<endl;
+    }
+  else if(in == '2')
+    {
+      printPostfix(node);
+      cout << endl;
+    }
+  else if(in == '3')
+    {
+      printPrefix(node);
+      cout << endl;
+    }
+  else if(in == '4')
+    {
+      printInfix(node);
+      cout << endl;
+      printPostfix(node);
+      cout<<endl;
+      printPrefix(node);
+      cout << endl;
+    }
+  getInput();
 }
 
 int main()
 {
-  map<char, int> precedence = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^', 3}, {'(', 0}, {')', 0}};
-
-  char test[17] = {'(','(','5','+','2',')','+','2','*','(','6','/','3',')',')','+','1'};
-  char test2[7] = {'1','+','4','*','2','+','2'};
-  printPrefix(createExpressionTree(infixToPostfix(test, precedence, 17), 17));
+  getInput();
 }
