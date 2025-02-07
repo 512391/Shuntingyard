@@ -10,15 +10,18 @@ Node::Node(char data)
 
 char Node::getData()
 {
+  //returns the data
   return Node::data;
 }
 
 Node* Node::getNext()
 {
+  //returns the next
   return Node::next;
 }
 
 void Node::setNext(Node* node)
 {
+  //sets the next based on the paramx
   Node::next = node;
 }
